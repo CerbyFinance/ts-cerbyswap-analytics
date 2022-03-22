@@ -83,7 +83,7 @@ export async function fetchTokenChartData(address: string, client: ApolloClient<
         date: dayData.startUnix,
         volumeUSD: +dayData.volumeUSD / 1e18,
         balanceCerUsd: +dayData.balanceCerUsd / 1e18,
-        APR: +dayData.APR / 1e18
+        APR: +dayData.APR
       }
       return accum
     }, {})

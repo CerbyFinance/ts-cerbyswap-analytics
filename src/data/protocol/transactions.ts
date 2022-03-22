@@ -140,8 +140,6 @@ export async function fetchTopTransactions(
       while(normalizedSwaps.length) {
           const swap = normalizedSwaps[0];
           normalizedSwaps.splice(0, 1);
-          console.log(normalizedSwaps);
-          // console.log(normalizedSwaps);
           if(normalizedSwaps.length >= 1) {
             const maybeRelated = normalizedSwaps.findIndex((related) => { return swap.feedType != related.feedType && swap.CerUSD == related.CerUSD });
             if(~maybeRelated) {
@@ -163,8 +161,6 @@ export async function fetchTopTransactions(
               continue;
             }
           }
-          // swaps.push(`Swap ${swap.feedType} ${swap.token.symbol}; CerUSD: ${+(swap.feedType == 'buy' ? swap.amountTokensIn : swap.amountTokensOut) / 1e18}, ${swap.token.symbol}: ${+(swap.feedType == 'sell' ? swap.amountTokensIn : swap.amountTokensOut) / 10*swap.token.decimals} `)
-          // console.log(CerUSD, swap.token.token)
           let token0Symbol, token1Symbol, token0Address, token1Address, amountToken0, amountToken1;
           if(swap.feedType == 'buy') {
             token0Symbol = formatTokenSymbol(CerUSD, 'CerUSD');

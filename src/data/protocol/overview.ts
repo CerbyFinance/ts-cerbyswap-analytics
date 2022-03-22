@@ -159,8 +159,6 @@ export function useFetchAggregateProtocolData(): {
 
   // for now until useMultipleDatas hook just manuall construct ProtocolData object
 
-  // console.log(ethereumData)
-  // console.log(arbitrumData)
 
   return {
     data: undefined,

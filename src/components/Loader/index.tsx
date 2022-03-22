@@ -1,5 +1,6 @@
-import React from 'react'
-import v3 from '../../assets/images/whitev3.svg'
+import React from 'react';
+import anime from 'animejs';
+// import v3 from '../../assets/images/whitev3.svg'
 import styled, { keyframes, css } from 'styled-components'
 
 const rotate = keyframes`
@@ -76,12 +77,61 @@ const AnimatedImg = styled.div`
   }
 `
 
+const StyledPreloadText = styled.div`
+  font-size: 4vw;
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+`
+
+const StyledTextBlock = styled.span`
+  position: relative;
+  display: inline-block;
+  overflow: hidden; 
+`
+
+const StyledTextLetter = styled.span`
+  transform-origin: 0 100%;
+  display: inline-block;
+  line-height: 1em;
+`
+
+const Text = "CerbySwap";
+
+
+
+const easing = "easeInOutQuint"
+const duration = 1000
+const delay = 40
+
+
+
 export const LocalLoader = ({ fill }: { fill: boolean }) => {
+  const animation = anime.timeline({
+    loop: true,
+    autoplay: true
+  })
+  animation
+  .add({
+      targets: '.' + StyledTextLetter.styledComponentId,
+      translateX: ["-1em", 0],
+      duration,
+      // easing: "easeOutBounce",
+      easing,
+      delay: (el, i) => delay * i
+  })
+  .add({
+      targets: '.' + StyledTextLetter.styledComponentId,
+      translateX: [0, "1em"],
+      duration,
+      easing,
+      delay: (el, i) => delay * i + 1000,
+  })
   return (
     <Wrapper fill={fill ? 1 : 0}>
-      <AnimatedImg>
-        <img src={v3} alt="loading-icon" />
-      </AnimatedImg>
+      <StyledPreloadText>
+      {Text.split('').map((char) => { return <StyledTextBlock><StyledTextLetter>{ char }</StyledTextLetter></StyledTextBlock>})}
+      </StyledPreloadText>
     </Wrapper>
   )
 }

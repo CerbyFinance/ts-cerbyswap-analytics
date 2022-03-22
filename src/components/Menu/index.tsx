@@ -97,21 +97,21 @@ export default function Menu() {
 
       {open && (
         <MenuFlyout>
-          <MenuItem id="link" href="https://uniswap.org/">
+          <MenuItem id="link" href="https://cerby.fi/">
             <Info size={14} />
             About
           </MenuItem>
-          <MenuItem id="link" href="https://docs.uniswap.org/">
+          <MenuItem id="link" href="https://docs.cerby.fi/">
             <BookOpen size={14} />
             Docs
           </MenuItem>
-          <MenuItem id="link" href={CODE_LINK}>
+          {/* <MenuItem id="link" href={CODE_LINK}>
             <Code size={14} />
             Github
-          </MenuItem>
-          <MenuItem id="link" href="https://discord.gg/FCfyBSbCU5">
+          </MenuItem> */}
+          <MenuItem id="link" href="https://tg">
             <MessageCircle size={14} />
-            Discord
+            Telegram
           </MenuItem>
         </MenuFlyout>
       )}

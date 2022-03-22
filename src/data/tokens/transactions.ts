@@ -186,7 +186,6 @@ export async function fetchTokenTransactions(
             }
           }
           // swaps.push(`Swap ${swap.feedType} ${swap.token.symbol}; CerUSD: ${+(swap.feedType == 'buy' ? swap.amountTokensIn : swap.amountTokensOut) / 1e18}, ${swap.token.symbol}: ${+(swap.feedType == 'sell' ? swap.amountTokensIn : swap.amountTokensOut) / 10*swap.token.decimals} `)
-          // console.log(CerUSD, swap.token.token)
           if(swap.token.token == address) {
             let token0Symbol, token1Symbol, token0Address, token1Address, amountToken0, amountToken1;
             if(swap.feedType == 'buy') {

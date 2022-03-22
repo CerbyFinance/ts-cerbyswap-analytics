@@ -98,11 +98,6 @@ export default function NetworkDropdown() {
           <TYPE.main fontSize="14px" color={theme.white} ml="8px" mt="-2px" mr="2px" style={{ whiteSpace: 'nowrap' }}>
             {activeNetwork.name}
           </TYPE.main>
-          {activeNetwork === EthereumNetworkInfo || activeNetwork === PolygonNetworkInfo ? null : (
-            <Badge bgColor={activeNetwork.primaryColor} style={{ margin: '0 4px' }}>
-              L2
-            </Badge>
-          )}
           <ChevronDown size="20px" />
         </RowFixed>
       </Wrapper>

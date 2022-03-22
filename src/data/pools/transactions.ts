@@ -137,8 +137,6 @@ export async function fetchPoolTransactions(
         const swap = normalizedSwaps[0];
         normalizedSwaps.splice(0, 1);
 
-        console.log("TID", transaction.id)
-        // console.log(normalizedSwaps);
         if(normalizedSwaps.length > 1) {
           const maybeRelated = normalizedSwaps.findIndex((related) => { return swap.feedType != related.feedType && swap.CerUSD == related.CerUSD });
           if(~maybeRelated) {

@@ -7,19 +7,30 @@ import { getEtherscanLink } from '../../utils'
 import useTheme from 'hooks/useTheme'
 import { EthereumNetworkInfo } from 'constants/networks'
 
+
+const StyledAdditional = styled.div`
+  // display: none;
+`
+
 const StyledPolling = styled.div`
+  position: fixed;
+  left: 2vw;
+  bottom: 2vw;
   display: flex;
   color: white;
-  margin-right: 1rem;
-  border-radius: 4px;
-  width: 192px;
-  padding: 4px;
+  border-radius: 16px;
+  padding: 8px 16px;
   background-color: ${({ theme }) => theme.bg2};
   transition: opacity 0.25s ease;
   color: ${({ theme }) => theme.green1};
+  overflow: hidden;
   :hover {
     opacity: 1;
   }
+  :hover ${StyledAdditional} {
+    display: inline-block;
+  }
+  transition: all 1s ease;
   z-index: 9999;
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -63,6 +74,7 @@ const Spinner = styled.div`
   top: -3px;
 `
 
+
 export default function Polling() {
   const theme = useTheme()
   const [activeNetwork] = useActiveNetworkVersion()
@@ -87,10 +99,12 @@ export default function Polling() {
   return (
     <ExternalLink href={latestBlock ? getEtherscanLink(1, latestBlock.toString(), 'block', activeNetwork) : ''}>
       <StyledPolling>
-        <TYPE.small mr="4px" color={theme.text3}>
-          Latest synced block:{' '}
-        </TYPE.small>
-        <TYPE.small style={{ opacity: isMounted ? '0.6' : '0.8' }}>{latestBlock}</TYPE.small>
+        {/* <StyledAdditional>
+          <TYPE.small mr="4px" color={theme.text3}>
+            Latest synced block:{' '}
+          </TYPE.small>
+        </StyledAdditional> */}
+        <TYPE.small style={{ opacity: isMounted ? '1' : '0.8' }}>{latestBlock}</TYPE.small>
         <StyledPollingDot>{!isMounted && <Spinner />}</StyledPollingDot>
       </StyledPolling>
     </ExternalLink>

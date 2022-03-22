@@ -121,7 +121,6 @@ export function useFetchedTokenDatas(
   const anyError = Boolean(error || error24 || error48 || blockError || errorWeek)
   const anyLoading = Boolean(loading || loading24 || loading48 || loadingWeek || !blocks)
 
-  console.log(anyLoading);
 
   // return early if not all data yet
   if (anyError || anyLoading) {
@@ -131,7 +130,6 @@ export function useFetchedTokenDatas(
       data: undefined,
     }
   }
-  console.log(data);
 
   const parsed = data?.pools
     ? data.pools.reduce((accum: { [address: string]: TokenFields }, poolData) => {
@@ -201,7 +199,6 @@ export function useFetchedTokenDatas(
         ? parseFloat(current.latestDailies.amountFeesCollected) / 1e16
         : 0
 
-    console.log(current);
     accum[address] = {
       exists: !!current,
       address,
@@ -219,8 +216,6 @@ export function useFetchedTokenDatas(
       priceUSDChange,
       priceUSDChangeWeek,
     }
-
-    console.log(accum)
 
     return accum
   }, {})

@@ -104,8 +104,6 @@ export default function TokenPage({
   }, [])
 
   const tokenData = useTokenData(address)
-  const poolsForToken = usePoolsForToken(address)
-  const poolDatas = usePoolDatas(poolsForToken ?? [])
   const transactions = useTokenTransactions(address)
   const chartData = useTokenChartData(address)
 
@@ -119,6 +117,20 @@ export default function TokenPage({
         return {
           time: unixToDate(day.date),
           value: day.balanceCerUsd,
+        }
+      })
+    } else {
+      return []
+    }
+  }, [chartData])
+
+
+  const formattedAprData = useMemo(() => {
+    if (chartData) {
+      return chartData.map((day) => {
+        return {
+          time: unixToDate(day.date),
+          value: day.APR,
         }
       })
     } else {
@@ -286,6 +298,8 @@ export default function TokenPage({
                             ? formatDollarAmount(latestValue, 2)
                             : view === ChartView.VOL
                             ? formatDollarAmount(formattedVolumeData[formattedVolumeData.length - 1]?.value)
+                            : view == ChartView.APR
+                            ? formatDollarAmount(formattedAprData[formattedAprData.length -1]?.value)
                             : view === ChartView.TVL
                             ? formatDollarAmount(formattedTvlData[formattedTvlData.length - 1]?.value)
                             : formatDollarAmount(tokenData.priceUSD, 2)}
@@ -300,7 +314,7 @@ export default function TokenPage({
                       )}
                     </TYPE.main>
                   </AutoColumn>
-                  <ToggleWrapper width="200px">
+                  <ToggleWrapper width="210px">
                     <ToggleElementFree
                       isActive={view === ChartView.VOL}
                       fontSize="12px"
@@ -341,7 +355,17 @@ export default function TokenPage({
                     setValue={setLatestValue}
                     setLabel={setValueLabel}
                   />
-                ) : view === ChartView.VOL ? (
+                ) : view == ChartView.APR ?
+                  <LineChart
+                    data={formattedAprData}
+                    color={backgroundColor}
+                    minHeight={340}
+                    value={latestValue}
+                    label={valueLabel}
+                    setValue={setLatestValue}
+                    setLabel={setValueLabel}
+                  />
+                : view === ChartView.VOL ? (
                   <BarChart
                     data={formattedVolumeData}
                     color={backgroundColor}

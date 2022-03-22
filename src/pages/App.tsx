@@ -17,6 +17,7 @@ import { ExternalLink, TYPE } from 'theme'
 import { useActiveNetworkVersion, useSubgraphStatus } from 'state/application/hooks'
 import { DarkGreyCard } from 'components/Card'
 import { SUPPORTED_NETWORK_VERSIONS, EthereumNetworkInfo } from 'constants/networks'
+import Polling from 'components/Header/Polling';
 
 const AppWrapper = styled.div`
   display: flex;
@@ -88,7 +89,7 @@ export default function App() {
   // pretend load buffer
   const [loading, setLoading] = useState(true)
   useEffect(() => {
-    setTimeout(() => setLoading(false), 1300)
+    setTimeout(() => setLoading(false), 1500)
   }, [])
 
   // update network based on route
@@ -134,7 +135,8 @@ export default function App() {
               </WarningWrapper>
             )}
             <Hide1080>
-              <TopBar />
+              {/* <TopBar /> */}
+              <Polling />
             </Hide1080>
             <Header />
           </HeaderWrapper>

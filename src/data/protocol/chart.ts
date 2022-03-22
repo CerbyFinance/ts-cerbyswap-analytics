@@ -87,8 +87,6 @@ async function fetchChartData(client: ApolloClient<NormalizedCacheObject>) {
     console.error(err)
   }
 
-  console.log(data)
-
   if (data) {
     const formattedExisting = data.reduce((accum: { [date: number]: ChartDayData }, dayData) => {
       const roundedDate = parseInt((dayData.date / ONE_DAY_UNIX).toFixed(0))

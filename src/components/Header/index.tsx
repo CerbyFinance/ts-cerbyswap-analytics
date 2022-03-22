@@ -12,6 +12,7 @@ import { networkPrefix } from 'utils/networkPrefix'
 import { AutoColumn } from 'components/Column'
 
 const HeaderFrame = styled.div`
+  // margin-top: 1vh;
   display: grid;
   grid-template-columns: 1fr 120px;
   align-items: center;
@@ -55,6 +56,12 @@ const HeaderRow = styled(RowFixed)`
   @media (max-width: 1080px) {
     width: 100%;
   }
+
+  // box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  // // border: 1px solid ${({ theme}) => theme.bg1};
+  // padding: 15px 35px;
+  // background-color: ${({ theme }) => theme.bg2};
+  // border-radius: 25px;
 `
 
 const HeaderLinks = styled(Row)`
@@ -162,7 +169,7 @@ export default function Header() {
       <HeaderRow>
         <Title to={networkPrefix(activeNewtork)}>
           <UniIcon>
-            <img width={'24px'} src={LogoDark} alt="logo" />
+            <img width={'30px'} src={LogoDark} alt="logo" />
           </UniIcon>
         </Title>
         <HeaderLinks>
