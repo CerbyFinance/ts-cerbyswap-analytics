@@ -7,8 +7,14 @@ import useHttpLocations from 'hooks/useHttpLocations'
 import { useActiveNetworkVersion } from 'state/application/hooks'
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 
+export const DATA_SERVER: string | undefined = process.env.REACT_APP_DATA_SERVER;
+
+if(!DATA_SERVER) {
+  throw new Error('Please specify in .env the domain data of the server')
+}
+
 export const getTokenLogoURL = (address: string) => {
-  return `http://sergey2.cerby.fi:8282/${address.toLowerCase()}.png`
+  return `${DATA_SERVER}/${address.toLowerCase()}.png`
 }
 
 const StyledLogo = styled(Logo)<{ size: string }>`

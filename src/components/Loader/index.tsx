@@ -130,7 +130,7 @@ export const LocalLoader = ({ fill }: { fill: boolean }) => {
   return (
     <Wrapper fill={fill ? 1 : 0}>
       <StyledPreloadText>
-      {Text.split('').map((char) => { return <StyledTextBlock><StyledTextLetter>{ char }</StyledTextLetter></StyledTextBlock>})}
+      {Text.split('').map((char, i) => { return <StyledTextBlock key={i}><StyledTextLetter>{ char }</StyledTextLetter></StyledTextBlock>})}
       </StyledPreloadText>
     </Wrapper>
   )

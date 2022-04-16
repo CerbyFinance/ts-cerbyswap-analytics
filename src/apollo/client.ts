@@ -1,13 +1,20 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client'
 
+const GRAPH_SERVER: string | undefined = process.env.REACT_APP_GRAPH_SERVER;
+
+if(!GRAPH_SERVER) {
+  console.log(process.env)
+  throw new Error("Please specify in .env the domain graph of the server");
+}
+
 
 export const healthClient = new ApolloClient({
-  uri: 'http://sergey2.cerby.fi:8031/graphql',
+  uri: `$${GRAPH_SERVER}:8031/graphql`,
   cache: new InMemoryCache(),
 });
 
 // export const blockClient = new ApolloClient({
-//   uri: 'http://sergey2.cerby.fi:8000/subgraphs/name/CerbySwap/testGanache',
+//   uri: `${GRAPH_SERVER}:8000/subgraphs/name/CerbySwap/testGanache`,
 //   cache: new InMemoryCache(),
 //   queryDeduplication: true,
 //   defaultOptions: {
@@ -22,7 +29,7 @@ export const healthClient = new ApolloClient({
 // });
 
 export const client = new ApolloClient({
-  uri: 'http://sergey2.cerby.fi:8000/subgraphs/name/CerbySwap/testGanache',
+  uri: `${GRAPH_SERVER}:8000/subgraphs/name/CerbySwap/testGanache`,
   cache: new InMemoryCache({
     typePolicies: {
       Token: {
@@ -50,7 +57,7 @@ export const client = new ApolloClient({
 });
 
 export const polygonClient = new ApolloClient({
-  uri: 'http://sergey2.cerby.fi:8000/subgraphs/name/CerbySwap/Polygon',
+  uri: `${GRAPH_SERVER}:8000/subgraphs/name/CerbySwap/Polygon`,
   cache: new InMemoryCache({
     typePolicies: {
       Token: {
@@ -78,7 +85,7 @@ export const polygonClient = new ApolloClient({
 })
 
 // export const polygonBlockClient = new ApolloClient({
-//   uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/polygon-blocks',
+//   uri: 'https://api.thegraph.com/subgraphs/name/ianlapham/polygon-blocks`,
 //   cache: new InMemoryCache(),
 //   queryDeduplication: true,
 //   defaultOptions: {
@@ -94,7 +101,7 @@ export const polygonClient = new ApolloClient({
 
 
 export const binanceClient = new ApolloClient({
-  uri: 'http://sergey2.cerby.fi:8000/subgraphs/name/CerbySwap/Binance',
+  uri: `${GRAPH_SERVER}:8000/subgraphs/name/CerbySwap/Binance`,
   cache: new InMemoryCache({
     typePolicies: {
       Token: {
@@ -122,7 +129,7 @@ export const binanceClient = new ApolloClient({
 })
 
 export const avalancheClient = new ApolloClient({
-  uri: 'http://sergey2.cerby.fi:8000/subgraphs/name/CerbySwap/Avalanche',
+  uri: `${GRAPH_SERVER}:8000/subgraphs/name/CerbySwap/Avalanche`,
   cache: new InMemoryCache({
     typePolicies: {
       Token: {
@@ -151,7 +158,7 @@ export const avalancheClient = new ApolloClient({
 
 
 export const fantomClient = new ApolloClient({
-  uri: 'http://sergey2.cerby.fi:8000/subgraphs/name/CerbySwap/Fantom',
+  uri: `${GRAPH_SERVER}:8000/subgraphs/name/CerbySwap/Fantom`,
   cache: new InMemoryCache({
     typePolicies: {
       Token: {
