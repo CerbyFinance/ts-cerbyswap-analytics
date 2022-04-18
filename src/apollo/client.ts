@@ -9,7 +9,7 @@ if(!GRAPH_SERVER) {
 
 
 export const healthClient = new ApolloClient({
-  uri: `$${GRAPH_SERVER}:8031/graphql`,
+  uri: `${GRAPH_SERVER}:8031/graphql`,
   cache: new InMemoryCache(),
 });
 
