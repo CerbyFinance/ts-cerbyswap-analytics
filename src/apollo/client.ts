@@ -9,12 +9,12 @@ if(!GRAPH_SERVER) {
 
 
 export const healthClient = new ApolloClient({
-  uri: `${GRAPH_SERVER}:8031/graphql`,
+  uri: `${GRAPH_SERVER}:8443/graphql`,
   cache: new InMemoryCache(),
 });
 
 // export const blockClient = new ApolloClient({
-//   uri: `${GRAPH_SERVER}:8000/subgraphs/name/CerbySwap/testGanache`,
+//   uri: `${GRAPH_SERVER}/subgraphs/name/CerbySwap/testGanache`,
 //   cache: new InMemoryCache(),
 //   queryDeduplication: true,
 //   defaultOptions: {
@@ -29,7 +29,7 @@ export const healthClient = new ApolloClient({
 // });
 
 export const client = new ApolloClient({
-  uri: `${GRAPH_SERVER}:8000/subgraphs/name/CerbySwap/testGanache`,
+  uri: `${GRAPH_SERVER}/subgraphs/name/CerbySwap/testGanache`,
   cache: new InMemoryCache({
     typePolicies: {
       Token: {
@@ -57,7 +57,7 @@ export const client = new ApolloClient({
 });
 
 export const polygonClient = new ApolloClient({
-  uri: `${GRAPH_SERVER}:8000/subgraphs/name/CerbySwap/Polygon`,
+  uri: `${GRAPH_SERVER}/subgraphs/name/CerbySwap/Polygon`,
   cache: new InMemoryCache({
     typePolicies: {
       Token: {
@@ -101,7 +101,7 @@ export const polygonClient = new ApolloClient({
 
 
 export const binanceClient = new ApolloClient({
-  uri: `${GRAPH_SERVER}:8000/subgraphs/name/CerbySwap/Binance`,
+  uri: `${GRAPH_SERVER}/subgraphs/name/CerbySwap/Binance`,
   cache: new InMemoryCache({
     typePolicies: {
       Token: {
@@ -129,7 +129,7 @@ export const binanceClient = new ApolloClient({
 })
 
 export const avalancheClient = new ApolloClient({
-  uri: `${GRAPH_SERVER}:8000/subgraphs/name/CerbySwap/Avalanche`,
+  uri: `${GRAPH_SERVER}/subgraphs/name/CerbySwap/Avalanche`,
   cache: new InMemoryCache({
     typePolicies: {
       Token: {
@@ -158,7 +158,7 @@ export const avalancheClient = new ApolloClient({
 
 
 export const fantomClient = new ApolloClient({
-  uri: `${GRAPH_SERVER}:8000/subgraphs/name/CerbySwap/Fantom`,
+  uri: `${GRAPH_SERVER}/subgraphs/name/CerbySwap/Fantom`,
   cache: new InMemoryCache({
     typePolicies: {
       Token: {

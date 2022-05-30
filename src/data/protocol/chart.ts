@@ -10,7 +10,7 @@ import { useActiveNetworkVersion, useClients } from 'state/application/hooks'
 // format dayjs with the libraries that we need
 dayjs.extend(utc)
 dayjs.extend(weekOfYear)
-const ONE_DAY_UNIX = 24 * 60 * 60
+const ONE_DAY_UNIX = 24 * 60 * 60;
 
 const GLOBAL_CHART = gql`
   query CerbySwapDayDatas($startTime: Int!, $skip: Int!) {
@@ -68,8 +68,8 @@ async function fetchChartData(client: ApolloClient<NormalizedCacheObject>) {
         const chartResData: typeof data = chartResDataRaw.globalDailies.map((daily) => {
           return {
             // ...daily,
-            tvlUSD: Math.floor(+daily.totalLiquidityUSD / 1e18),
-            volumeUSD: Math.floor(+daily.totalVolumeUSD / 1e18),
+            tvlUSD: Math.floor(+daily.totalLiquidityUSD ),
+            volumeUSD: Math.floor(+daily.totalVolumeUSD ),
             date: daily.startUnix
           };
         })

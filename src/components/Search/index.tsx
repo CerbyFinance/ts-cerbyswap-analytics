@@ -281,7 +281,7 @@ const Search = ({ ...rest }: React.HTMLAttributes<HTMLDivElement>) => {
               .slice(0, tokensShown)
               .map((t, i) => {
                 return (
-                  <HoverRowLink onClick={() => handleNav(networkPrefix(activeNetwork) + 'tokens/' + t.address)} key={i}>
+                  <HoverRowLink onClick={() => handleNav(networkPrefix(activeNetwork) + 'pools/' + t.address)} key={i}>
                     <ResponsiveGrid>
                       <RowFixed>
                         <CurrencyLogo address={t.address} />

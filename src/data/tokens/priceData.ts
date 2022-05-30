@@ -10,6 +10,13 @@ import { PriceChartEntry } from 'types'
 dayjs.extend(utc)
 dayjs.extend(weekOfYear)
 
+export function calculateTVL(current: { balanceCerby: string, decimals: number | { decimals: number }, priceUSD: string, price: string }): number {
+  return (
+    parseInt(current.balanceCerby) /
+    (10 ** (current.decimals instanceof Object ? current.decimals.decimals : current.decimals))) /
+      (+current.priceUSD == 1 ? +current.price : +current.priceUSD / +current.price);
+}
+
 export const PRICES_BY_BLOCK = (tokenAddress: string, blocks: any) => {
   let queryString = 'query blocks {'
   queryString += blocks.map(

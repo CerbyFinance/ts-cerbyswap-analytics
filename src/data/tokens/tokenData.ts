@@ -8,6 +8,7 @@ import { TokenData } from 'state/tokens/reducer'
 import { useEthPrices } from 'hooks/useEthPrices'
 import { formatTokenSymbol, formatTokenName } from 'utils/tokens'
 import { useActiveNetworkVersion, useClients } from 'state/application/hooks'
+import { calculateTVL } from './priceData'
 
 export const TOKENS_BULK = (block: number | undefined, tokens: string[]) => {
   let tokenString = `[`
@@ -20,15 +21,16 @@ export const TOKENS_BULK = (block: number | undefined, tokens: string[]) => {
     query superPools {
       pools(where: {id_in: ${tokenString}},` +
     (block ? `block: {number: ${block}} ,` : ``) +
-    ` orderBy: balanceCerUsd, orderDirection: desc, subgraphError: allow) {
+    ` orderBy: balanceCerby, orderDirection: desc, subgraphError: allow) {
         id
         poolId
         token
         vaultAddress
         balanceToken
-        balanceCerUsd
-        CreditCerUsd
+        balanceCerby
+        CreditCerby
         price
+        priceUSD
         symbol
         name
         decimals
@@ -36,6 +38,7 @@ export const TOKENS_BULK = (block: number | undefined, tokens: string[]) => {
           volumeUSD
           amountFeesCollected
           priceChangePercent
+          priceUSDChangePercent
         }
       }
     }
@@ -49,16 +52,18 @@ interface TokenFields {
   token: string
   vaultAddress: string
   balanceToken: string
-  balanceCerUsd: string
-  CreditCerUsd: string
+  balanceCerby: string
+  CreditCerby: string
   price: string
+  priceUSD: string
   symbol: string
   name: string
-  decimals: string
+  decimals: number
   latestDailies: {
     volumeUSD: string
     amountFeesCollected: string
     priceChangePercent: string
+    priceUSDChangePercent: string
   }
 }
 
@@ -176,13 +181,13 @@ export function useFetchedTokenDatas(
         : current
         ? parseFloat(current.latestDailies.volumeUSD)
         : 0
-    const tvlUSD = current ? parseFloat(current.balanceCerUsd) : 0
-    const tvlUSDChange = getPercentChange(current?.balanceCerUsd, oneDay?.balanceCerUsd)
+    const tvlUSD = current ? calculateTVL(current) : 0
+    const tvlUSDChange = getPercentChange(current ? calculateTVL(current).toString() : undefined, oneDay ? calculateTVL(oneDay).toString() : undefined)
     const tvlToken = current ? parseFloat(current.balanceToken) : 0
-    const priceUSD = current ? parseFloat(current.price) : 0
-    const priceUSDOneDay = oneDay ? parseFloat(oneDay.price) : 0
-    const priceUSDWeek = week ? parseFloat(week.price) : 0
-    const priceUSDChange = parseFloat(current.latestDailies.priceChangePercent)
+    const priceUSD = current ? parseFloat(current.priceUSD) : 0
+    const priceUSDOneDay = oneDay ? parseFloat(oneDay.priceUSD) : 0
+    const priceUSDWeek = week ? parseFloat(week.priceUSD) : 0
+    const priceUSDChange = parseFloat(current.latestDailies.priceUSDChangePercent)
 
     const priceUSDChangeWeek =
       priceUSD && priceUSDWeek ? getPercentChange(priceUSD.toString(), priceUSDWeek.toString()) : 0
@@ -193,11 +198,11 @@ export function useFetchedTokenDatas(
       //   ? parseFloat(current.txCount)
       //   : 0
     const feesUSD =
-      current && oneDay
+      (current && oneDay
         ? (parseFloat(current.latestDailies.amountFeesCollected) - parseFloat(oneDay.latestDailies.amountFeesCollected)) / 1e16
         : current
         ? parseFloat(current.latestDailies.amountFeesCollected) / 1e16
-        : 0
+        : 0) * (+current.priceUSD / +current.price);
 
     accum[address] = {
       exists: !!current,
@@ -208,8 +213,8 @@ export function useFetchedTokenDatas(
       volumeUSDChange,
       volumeUSDWeek,
       txCount,
-      tvlUSD: tvlUSD / 1e16,
-      feesUSD: feesUSD / 1e16,
+      tvlUSD: tvlUSD,
+      feesUSD: feesUSD,
       tvlUSDChange,
       tvlToken: tvlToken / +current.decimals,
       priceUSD,

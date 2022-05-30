@@ -11,6 +11,7 @@ const GLOBAL_TRANSACTIONS = gql`
         amountTokensIn
         amountTokensOut
         amountFeesCollected
+        amountUSD
         token	{
           id
           symbol
@@ -28,7 +29,8 @@ const GLOBAL_TRANSACTIONS = gql`
       id
       feedType
       amountTokens
-      amountCerUsd
+      amountCerby
+      amountUSD
       amountLpTokensBalanceToBurn
       token	{
         id
@@ -57,6 +59,7 @@ type TransactionResults = {
       amountTokensIn: string
       amountTokensOut: string
       amountFeesCollected: string
+      amountUSD: string
       token: {
         id: string
         symbol: string
@@ -71,7 +74,8 @@ type TransactionResults = {
     id: string
     feedType: "add" | "remove"
     amountTokens: string
-    amountCerUsd: string
+    amountCerby: string
+    amountUSD: string
     amountLpTokensBalanceToBurn: string
     token: {
       id: string
@@ -90,23 +94,23 @@ type TransactionResults = {
 
 }
 
-type normalizedSwap = TransactionResults["transactions"][0]["swaps"][0] & { CerUSD: number, TokenAmount: number };
+type normalizedSwap = TransactionResults["transactions"][0]["swaps"][0] & { Cerby: number, TokenAmount: number };
 
 export function swapNormalization(swap: TransactionResults["transactions"][0]["swaps"][0]): normalizedSwap {
   return {
     ...swap,
-    CerUSD: +(swap.feedType == 'buy' ? swap.amountTokensIn : swap.amountTokensOut) / 1e18,
+    Cerby: +(swap.feedType == 'buy' ? swap.amountTokensIn : swap.amountTokensOut) / 1e18,
     TokenAmount: +(swap.feedType == 'sell' ? swap.amountTokensIn : swap.amountTokensOut) / 10 ** swap.token.decimals
   }
 }
 
 
-type normalizedLiqudity = TransactionResults["liqudityEvents"][0] & { CerUSD: number, TokenAmount: number };
+type normalizedLiqudity = TransactionResults["liqudityEvents"][0] & { Cerby: number, TokenAmount: number };
 
 export function liqudityNormalization(liqudity: TransactionResults["liqudityEvents"][0]): normalizedLiqudity {
   return {
     ...liqudity,
-    CerUSD: +liqudity.amountCerUsd / 1e18,
+    Cerby: +liqudity.amountCerby / 1e18,
     TokenAmount: +liqudity.amountTokens / 10 ** liqudity.token.decimals
   }
 }
@@ -124,7 +128,7 @@ export async function fetchTopTransactions(
       return undefined
     }
 
-    const CerUSD = "0x333333f9E4ba7303f1ac0BF8fE1F47d582629194";
+    const Cerby = "0xdef1fac7Bf08f173D286BbBDcBeeADe695129840";
 
     const swaps: Transaction[] = [];
 
@@ -141,7 +145,7 @@ export async function fetchTopTransactions(
           const swap = normalizedSwaps[0];
           normalizedSwaps.splice(0, 1);
           if(normalizedSwaps.length >= 1) {
-            const maybeRelated = normalizedSwaps.findIndex((related) => { return swap.feedType != related.feedType && swap.CerUSD == related.CerUSD });
+            const maybeRelated = normalizedSwaps.findIndex((related) => { return swap.feedType != related.feedType && swap.Cerby == related.Cerby });
             if(~maybeRelated) {
               const Related = normalizedSwaps[maybeRelated];
               swaps.push({
@@ -152,7 +156,7 @@ export async function fetchTopTransactions(
                 token1Symbol: formatTokenSymbol(Related.token.token, Related.token.symbol),
                 token0Address: swap.token.token,
                 token1Address: Related.token.token,
-                amountUSD: swap.CerUSD,
+                amountUSD: +swap.amountUSD,
                 amountToken0: swap.TokenAmount,
                 amountToken1: Related.TokenAmount,
                 timestamp: transaction.timestamp
@@ -163,18 +167,18 @@ export async function fetchTopTransactions(
           }
           let token0Symbol, token1Symbol, token0Address, token1Address, amountToken0, amountToken1;
           if(swap.feedType == 'buy') {
-            token0Symbol = formatTokenSymbol(CerUSD, 'CerUSD');
-            token0Address = CerUSD;
+            token0Symbol = formatTokenSymbol(Cerby, 'CERBY');
+            token0Address = Cerby;
             token1Symbol = formatTokenSymbol(swap.token.token, swap.token.symbol);
             token1Address = swap.token.token;
-            amountToken0 = swap.CerUSD;
+            amountToken0 = swap.Cerby;
             amountToken1 = swap.TokenAmount;
           } else {
-            token1Symbol = formatTokenSymbol(CerUSD, 'CerUSD');
-            token1Address = CerUSD;
+            token1Symbol = formatTokenSymbol(Cerby, 'CERBY');
+            token1Address = Cerby;
             token0Symbol = formatTokenSymbol(swap.token.token, swap.token.symbol);
             token0Address = swap.token.token;
-            amountToken1 = swap.CerUSD;
+            amountToken1 = swap.Cerby;
             amountToken0 = swap.TokenAmount;
           }
           swaps.push({
@@ -185,7 +189,7 @@ export async function fetchTopTransactions(
             token1Symbol,
             token0Address,
             token1Address,
-            amountUSD: swap.CerUSD,
+            amountUSD: +swap.amountUSD,
             amountToken0,
             amountToken1,
             timestamp: transaction.timestamp
@@ -200,18 +204,18 @@ export async function fetchTopTransactions(
           const liqudity = liqudityNormalization(l)
           let token0Symbol, token1Symbol, token0Address, token1Address, amountToken0, amountToken1;
           if(liqudity.feedType == 'add') {
-            token0Symbol = formatTokenSymbol(CerUSD, 'CerUSD');
-            token0Address = CerUSD;
+            token0Symbol = formatTokenSymbol(Cerby, 'CERBY');
+            token0Address = Cerby;
             token1Symbol = formatTokenSymbol(liqudity.token.token, liqudity.token.symbol);
             token1Address = liqudity.token.token;
-            amountToken0 = liqudity.CerUSD;
+            amountToken0 = liqudity.Cerby;
             amountToken1 = liqudity.TokenAmount;
           } else {
-            token1Symbol = formatTokenSymbol(CerUSD, 'CerUSD');
-            token1Address = CerUSD;
+            token1Symbol = formatTokenSymbol(Cerby, 'CERBY');
+            token1Address = Cerby;
             token0Symbol = formatTokenSymbol(liqudity.token.token, liqudity.token.symbol);
             token0Address = liqudity.token.token;
-            amountToken1 = liqudity.CerUSD;
+            amountToken1 = liqudity.Cerby;
             amountToken0 = liqudity.TokenAmount;
           }
           return {
@@ -223,7 +227,7 @@ export async function fetchTopTransactions(
             token1Symbol,
             token0Address,
             token1Address,
-            amountUSD: liqudity.CerUSD,
+            amountUSD: +liqudity.amountUSD,
             amountToken0,
             amountToken1,
           }

@@ -116,7 +116,7 @@ export default function TokenPage({
       return chartData.map((day) => {
         return {
           time: unixToDate(day.date),
-          value: day.balanceCerUsd,
+          value: day.TVL,
         }
       })
     } else {

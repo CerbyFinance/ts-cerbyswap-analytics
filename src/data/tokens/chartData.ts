@@ -4,6 +4,7 @@ import utc from 'dayjs/plugin/utc'
 import weekOfYear from 'dayjs/plugin/weekOfYear'
 import gql from 'graphql-tag'
 import { TokenChartEntry } from 'state/tokens/reducer'
+import { calculateTVL } from './priceData'
 
 // format dayjs with the libraries that we need
 dayjs.extend(utc)
@@ -22,28 +23,34 @@ const TOKEN_CHART = gql`
     ) {
       startUnix
       volumeUSD
-      balanceCerUsd
+      balanceCerby
+      priceUSD
+      price
+      decimals: token {
+        decimals
+      }
       APR
     }
   }
 `
+interface poolDailies {
+  startUnix: number
+  volumeUSD: string
+  balanceCerby: string
+  priceUSD: string
+  price: string
+  decimals: {
+    decimals: number
+  }
+  APR: string
+}
 
 interface ChartResults {
-  poolDailies: {
-    startUnix: number
-    volumeUSD: string
-    balanceCerUsd: string
-    APR: string
-  }[]
+  poolDailies: poolDailies[]
 }
 
 export async function fetchTokenChartData(address: string, client: ApolloClient<NormalizedCacheObject>) {
-  let data: {
-    startUnix: number
-    volumeUSD: string
-    balanceCerUsd: string
-    APR: string
-  }[] = []
+  let data: poolDailies[] = []
   const startTimestamp = 1619170975
   const endTimestamp = dayjs.utc().unix()
 
@@ -82,7 +89,7 @@ export async function fetchTokenChartData(address: string, client: ApolloClient<
       accum[roundedDate] = {
         date: dayData.startUnix,
         volumeUSD: +dayData.volumeUSD / 1e18,
-        balanceCerUsd: +dayData.balanceCerUsd / 1e18,
+        TVL: calculateTVL(dayData),
         APR: +dayData.APR
       }
       return accum
@@ -92,7 +99,7 @@ export async function fetchTokenChartData(address: string, client: ApolloClient<
 
     // fill in empty days ( there will be no day datas if no trades made that day )
     let timestamp = firstEntry?.date ?? startTimestamp
-    let latestTvl = firstEntry?.balanceCerUsd ?? 0
+    let latestTvl = firstEntry?.TVL ?? 0
     const latestAPR = firstEntry?.APR ?? 0
     while (timestamp < endTimestamp - ONE_DAY_UNIX) {
       const nextDay = timestamp + ONE_DAY_UNIX
@@ -101,11 +108,11 @@ export async function fetchTokenChartData(address: string, client: ApolloClient<
         formattedExisting[currentDayIndex] = {
           date: nextDay,
           volumeUSD: 0,
-          balanceCerUsd: latestTvl,
+          TVL: latestTvl,
           APR: latestAPR
         }
       } else {
-        latestTvl = formattedExisting[currentDayIndex].balanceCerUsd
+        latestTvl = formattedExisting[currentDayIndex].TVL
       }
       timestamp = nextDay
     }

@@ -117,9 +117,9 @@ export function useFetchProtocolData(
       feesUSD && feesOneWindowAgo ? getPercentChange(feesUSD.toString(), feesOneWindowAgo.toString()) : 0
 
     return {
-      volumeUSD: volumeUSD / 1e18,
+      volumeUSD: volumeUSD,
       volumeUSDChange: typeof volumeUSDChange === 'number' ? volumeUSDChange : 0,
-      tvlUSD: parseFloat(parsed.totalLiquidityUSD) / 1e18,
+      tvlUSD: parseFloat(parsed.totalLiquidityUSD),
       tvlUSDChange,
       feesUSD,
       feeChange,

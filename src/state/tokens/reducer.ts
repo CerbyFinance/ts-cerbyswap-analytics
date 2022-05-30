@@ -42,7 +42,7 @@ export type TokenData = {
 export interface TokenChartEntry {
   date: number
   volumeUSD: number
-  balanceCerUsd: number
+  TVL: number
   APR: number
 }
 

@@ -5,7 +5,7 @@ export const POOLS_FOR_TOKEN = gql`
   query topPools($address: Bytes!) {
     asToken0: pools(
       first: 200
-      orderBy: balanceCerUsd
+      orderBy: balanceCerby
       orderDirection: desc
       where: { token0: $address }
       subgraphError: allow
@@ -14,7 +14,7 @@ export const POOLS_FOR_TOKEN = gql`
     }
     asToken1: pools(
       first: 200
-      orderBy: balanceCerUsd
+      orderBy: balanceCerby
       orderDirection: desc
       where: { token1: $address }
       subgraphError: allow
